@@ -16,5 +16,8 @@ ItemEstoque* buscarItem(ItemEstoque* estoque, const char* nome);
 void listarEstoque(ItemEstoque* estoque);
 void inserirItem(ItemEstoque** estoque, const char* nome, int quantidade, float preco);
 void liberarEstoque(ItemEstoque* estoque);
+int salvarEstoque(ItemEstoque* estoque, const char* nomeArquivo);
+ItemEstoque* carregarEstoque(const char* nomeArquivo);
+void exportarEstoqueParaCSV(ItemEstoque* estoque, const char* nomeArquivo);
 
 #endif // ESTOQUE_H

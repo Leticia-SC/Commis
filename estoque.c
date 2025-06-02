@@ -99,3 +99,80 @@ void liberarEstoque(ItemEstoque* estoque) {
         free(temp);
     }
 }
+
+// estoque.c (adicionar novas funções)
+int salvarEstoque(ItemEstoque* estoque, const char* nomeArquivo) {
+    FILE* arquivo = fopen(nomeArquivo, "w");
+    if (arquivo == NULL) {
+        printf("Erro ao abrir arquivo para salvar estoque.\n");
+        return 0;
+    }
+
+    ItemEstoque* atual = estoque;
+    while (atual != NULL) {
+        fprintf(arquivo, "%s|%d|%.2f\n", atual->nome, atual->quantidade, atual->preco);
+        atual = atual->proximo;
+    }
+
+    fclose(arquivo);
+    return 1;
+}
+
+ItemEstoque* carregarEstoque(const char* nomeArquivo) {
+    FILE* arquivo = fopen(nomeArquivo, "r");
+    if (arquivo == NULL) {
+        printf("Arquivo de estoque não encontrado. Criando novo estoque.\n");
+        return NULL;
+    }
+
+    ItemEstoque* estoque = NULL;
+    char linha[200];
+    while (fgets(linha, sizeof(linha), arquivo)) {
+        char nome[50];
+        int quantidade;
+        float preco;
+
+        // Remove o \n do final
+        linha[strcspn(linha, "\n")] = 0;
+
+        // Divide a linha nos separadores |
+        char* token = strtok(linha, "|");
+        if (token) strcpy(nome, token);
+        
+        token = strtok(NULL, "|");
+        if (token) quantidade = atoi(token);
+        
+        token = strtok(NULL, "|");
+        if (token) preco = atof(token);
+
+        // Cria e adiciona o item
+        ItemEstoque* novoItem = criarItem(nome, quantidade, preco);
+        adicionarItem(&estoque, novoItem);
+    }
+
+    fclose(arquivo);
+    return estoque;
+}
+
+void exportarEstoqueParaCSV(ItemEstoque* estoque, const char* nomeArquivo) {
+    FILE* arquivo = fopen(nomeArquivo, "w");
+    if (arquivo == NULL) {
+        printf("Erro ao criar arquivo CSV do estoque.\n");
+        return;
+    }
+
+    // Cabeçalho do CSV
+    fprintf(arquivo, "Item,Quantidade,Preço Unitário\n");
+
+    ItemEstoque* atual = estoque;
+    while (atual != NULL) {
+        fprintf(arquivo, "\"%s\",%d,%.2f\n", 
+                atual->nome, 
+                atual->quantidade, 
+                atual->preco);
+        atual = atual->proximo;
+    }
+
+    fclose(arquivo);
+    printf("Estoque exportado para '%s' (pode abrir no Excel)\n", nomeArquivo);
+}

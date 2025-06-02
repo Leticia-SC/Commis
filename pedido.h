@@ -1,3 +1,5 @@
+#include <time.h>  // Para time_t e time()
+
 #ifndef PEDIDO_H
 #define PEDIDO_H
 
@@ -17,6 +19,7 @@ typedef struct Pedido {
     int totalItens;
     float totalValor;
     char status[MAX_STATUS];
+    time_t timestamp;
     ItemPedido* itens;
     struct Pedido* proximo;
 } Pedido;
@@ -31,9 +34,11 @@ int removerPedidoPorMesa(Pedido** listaPedidos, int numeroMesa);
 Pedido* buscarPedidoPorMesa(Pedido* listaPedidos, int numeroMesa);
 void alterarStatusPedido(Pedido* pedido, const char* novoStatus);
 void listarPedidosAbertos(Pedido* lista);
-void listarPedidosFinalizados(Pedido* lista);
 void liberarPedidos(Pedido* listaPedidos);
 void exibirEstatisticas(Pedido* listaPedidos);
-
+int salvarPedidos(Pedido* listaPedidos, const char* nomeArquivo);
+Pedido* carregarPedidos(const char* nomeArquivo);
+void exportarPedidosParaCSV(Pedido* listaPedidos, const char* nomeArquivo);
+void ordenarPedidos(Pedido** listaPedidos);
 
 #endif
