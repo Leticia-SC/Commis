@@ -17,9 +17,9 @@ ItemEstoque* criarItem(const char* nome, int quantidade, float preco) {
     return novoItem;
 }
 
-void adicionarItem(ItemEstoque** estoque, ItemEstoque* novoItem) {
+void adicionarItem(ItemEstoque** estoque, ItemEstoque* novoItem, int mostrarMensagem) {
     if (*estoque == NULL) {
-        *estoque = novoItem;  // Lista vazia
+        *estoque = novoItem;
     } else {
         ItemEstoque* temp = *estoque;
         while (temp->proximo != NULL) {
@@ -27,7 +27,8 @@ void adicionarItem(ItemEstoque** estoque, ItemEstoque* novoItem) {
         }
         temp->proximo = novoItem;
     }
-    printf("Item '%s' adicionado ao estoque.\n", novoItem->nome);
+    if (mostrarMensagem)
+        printf("Item '%s' adicionado ao estoque.\n", novoItem->nome);
 }
 
 void atualizarQuantidade(ItemEstoque* estoque, const char* nome, int novaQuantidade) {
@@ -62,7 +63,7 @@ void listarEstoque(ItemEstoque* estoque) {
     printf("\n--- ESTOQUE ---\n");
     ItemEstoque* temp = estoque;
     while (temp != NULL) {
-        printf("Item: %s | Quantidade: %d | Preço: R$ %.2f\n",
+        printf("Item: %s | Quantidade: %d | Preco: R$ %.2f\n",
                temp->nome, temp->quantidade, temp->preco);
         temp = temp->proximo;
     }
@@ -88,7 +89,7 @@ void inserirItem(ItemEstoque** estoque, const char* nome, int quantidade, float 
         atualizarQuantidade(*estoque, nome, existente->quantidade + quantidade);
     } else {
         ItemEstoque* novo = criarItem(nome, quantidade, preco);
-        adicionarItem(estoque, novo);
+        adicionarItem(estoque, novo, 1);
     }
 }
 
@@ -100,7 +101,6 @@ void liberarEstoque(ItemEstoque* estoque) {
     }
 }
 
-// estoque.c (adicionar novas funções)
 int salvarEstoque(ItemEstoque* estoque, const char* nomeArquivo) {
     FILE* arquivo = fopen(nomeArquivo, "w");
     if (arquivo == NULL) {
@@ -147,7 +147,7 @@ ItemEstoque* carregarEstoque(const char* nomeArquivo) {
 
         // Cria e adiciona o item
         ItemEstoque* novoItem = criarItem(nome, quantidade, preco);
-        adicionarItem(&estoque, novoItem);
+        adicionarItem(&estoque, novoItem, 0);
     }
 
     fclose(arquivo);
@@ -162,7 +162,7 @@ void exportarEstoqueParaCSV(ItemEstoque* estoque, const char* nomeArquivo) {
     }
 
     // Cabeçalho do CSV
-    fprintf(arquivo, "Item,Quantidade,Preço Unitário\n");
+    fprintf(arquivo, "Item,Quantidade,Preco Unitario\n");
 
     ItemEstoque* atual = estoque;
     while (atual != NULL) {

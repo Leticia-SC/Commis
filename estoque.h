@@ -10,7 +10,7 @@ typedef struct ItemEstoque {
 
 // Funções para manipulação do estoque
 ItemEstoque* criarItem(const char* nome, int quantidade, float preco);
-void adicionarItem(ItemEstoque** estoque, ItemEstoque* novoItem);
+void adicionarItem(ItemEstoque** estoque, ItemEstoque* novoItem, int mostrarMensagem);
 void atualizarQuantidade(ItemEstoque* estoque, const char* nome, int novaQuantidade);
 ItemEstoque* buscarItem(ItemEstoque* estoque, const char* nome);
 void listarEstoque(ItemEstoque* estoque);

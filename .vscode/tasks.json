@@ -9,6 +9,7 @@
         "main.c",
         "estoque.c",
         "pedido.c",
+        "cardapio.c",
         "-o",
         "restaurante.exe"
       ],
